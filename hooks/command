@@ -68,6 +68,7 @@ is_macos() {
 
 tty_default='on'
 init_default='on'
+rm_default='on'
 mount_agent_default='on'
 mount_ssh_agent=''
 pwd_default="$PWD"
@@ -95,7 +96,10 @@ else
   args+=("-i")
 fi
 
-args+=("--rm")
+# Support docker run --rm.
+if [[ "${BUILDKITE_PLUGIN_DOCKER_RM:-$rm_default}" =~ ^(true|on|1)$ ]] ; then
+    args+=("--rm")
+fi
 
 # Support docker run --init.
 if [[ "${BUILDKITE_PLUGIN_DOCKER_INIT:-$init_default}" =~ ^(true|on|1)$ ]] ; then
